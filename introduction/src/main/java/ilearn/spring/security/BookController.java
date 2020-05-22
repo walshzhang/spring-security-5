@@ -8,8 +8,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+@CrossOrigin("*")
 @RestController
 public class BookController {
     private List<Book> books;
@@ -21,6 +23,13 @@ public class BookController {
     @GetMapping("/books")
     public List<Book> getAllBooks() {
         return books;
+    }
+
+    @GetMapping("/books/{bookId}")
+    public Optional<Book> getBook(@PathVariable int bookId) {
+        return books.stream()
+                .filter(book -> book.getId() == bookId)
+                .findFirst();
     }
 
     @PostMapping("/books")
