@@ -56,4 +56,9 @@ public class BookController {
         }
         books.removeIf(book -> Objects.equals(book.id, bookId));
     }
+
+    @DeleteMapping("/books")
+    public void removeBooks(@RequestBody List<Integer> ids) {
+        books.removeIf(book -> ids.contains(book.getId()));
+    }
 }
