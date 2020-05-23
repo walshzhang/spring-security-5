@@ -1,64 +1,73 @@
 package ilearn.spring.security;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
+@Controller
 @CrossOrigin("*")
-@RestController
+@RequestMapping("/books")
 public class BookController {
-    private List<Book> books;
+    private final BookService service;
 
-    public BookController() {
-        books = new ArrayList<>();
+    public BookController(BookService service) {
+        this.service = service;
     }
 
-    @GetMapping("/books")
-    public List<Book> getAllBooks() {
-        return books;
+    @GetMapping
+    public String getAllBooks(Model model) {
+        List<Book> books = service.getBooks();
+        model.addAttribute("books", books);
+        return "list";
     }
 
-    @GetMapping("/books/{bookId}")
-    public Optional<Book> getBook(@PathVariable int bookId) {
-        return books.stream()
-                .filter(book -> book.getId() == bookId)
-                .findFirst();
+    @GetMapping("/{bookId}")
+    public String getBook(@PathVariable int bookId,
+                          Model model) {
+        model.addAttribute("book",
+                service.getBook(bookId));
+        return "details";
     }
 
-    @PostMapping("/books")
-    public void addNewBook(@RequestBody Book book) {
-        book.setId(books.size() + 1);
-        books.add(book);
+    @GetMapping("/addForm")
+    public String addNewBookForm() {
+        return "add";
     }
 
-    @PutMapping("/books/{bookId}")
-    public void updateBook(@PathVariable int bookId, @RequestBody Book book) {
-        if (books.stream().noneMatch(item -> Objects.equals(bookId, item.id))) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    @PostMapping("add")
+    public String addNewBook(Book book) {
+        service.newBook(book);
+        return "redirect:/books";
+    }
+
+    @GetMapping("/updateForm/{bookId}")
+    public String editForm(@PathVariable int bookId,
+                           Model model) {
+        model.addAttribute("book", service.getBook(bookId));
+        return "edit";
+    }
+
+    @PostMapping("/update/{bookId}")
+    public String updateBook(@PathVariable int bookId, Book book) {
         Assert.isTrue(book.id == bookId, "book not found");
-        books = books.stream()
-                .map(item -> Objects.equals(bookId, item.id) ? book : item)
-                .collect(Collectors.toList());
+        service.updateBook(book);
+        return "redirect:/books";
     }
 
-    @DeleteMapping("/books/{bookId}")
-    public void removeBook(@PathVariable int bookId) {
-        if (books.stream().noneMatch(item -> Objects.equals(bookId, item.id))) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        books.removeIf(book -> Objects.equals(book.id, bookId));
+    @PostMapping("/remove/{bookId}")
+    public String removeBook(@PathVariable int bookId) {
+        service.getBooks().removeIf(book -> Objects.equals(book.id, bookId));
+        return "redirect:/books";
     }
 
-    @DeleteMapping("/books")
-    public void removeBooks(@RequestBody List<Integer> ids) {
-        books.removeIf(book -> ids.contains(book.getId()));
+    @PostMapping("/remove")
+    public String removeBooks(@RequestBody List<Integer> ids) {
+        service.getBooks().removeIf(book -> ids.contains(book.getId()));
+        return "redirect:/books";
     }
 }

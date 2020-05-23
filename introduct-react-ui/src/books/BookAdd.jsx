@@ -20,7 +20,7 @@ function BookAdd() {
       }
     };
 
-    fetch('http://localhost:8080/books', data)
+    fetch('http://localhost:8080/api/books', data)
       .then(response => history.push('/list'))
       .catch(error => console.log(error));
   };

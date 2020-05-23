@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Details</title>
+    <link href="../static/css/books.css" th:href="@{/css/books.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <p>标题：<span th:text="${book.title}">标题</span></p>
+    <p>价格：<span th:text="${book.price}">0</span></p>
+    <p>
+        <a class="btn btn-info" th:href="@{/books}">返回列表</a>
+    </p>
+</div>
+</body>
+</html>

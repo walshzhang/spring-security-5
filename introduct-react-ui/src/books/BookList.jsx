@@ -10,7 +10,7 @@ function BookList() {
   useTitle('Book List');
 
   useEffect(() => {
-    fetch('http://localhost:8080/books')
+    fetch('http://localhost:8080/api/books')
       .then(response => response.json())
       .then(json => setBooks(json))
   }, []);
@@ -37,7 +37,7 @@ function BookList() {
   }
 
   const handleDelete = id => {
-    fetch(`http://localhost:8080/books/${id}`, {
+    fetch(`http://localhost:8080/api/books/${id}`, {
       method: 'DELETE'
     }).then(response => setBooks(books.filter(book => book.id !== id)))
       .catch(error => alert(error));
@@ -58,14 +58,15 @@ function BookList() {
           </td>
           <td align={"center"} valign={'middle'}>
             <Link to={`/edit/${id}`} className={'btn btn-info'} style={{textDecoration: 'none'}}>编辑</Link>
-            <button className={'btn btn-danger'} style={{marginLeft: '5px'}} onClick={() => handleDelete(id)}>删除</button>
+            <button className={'btn btn-danger'} style={{marginLeft: '5px'}} onClick={() => handleDelete(id)}>删除
+            </button>
           </td>
         </tr>)
     )
   }
 
   const batchDelete = () => {
-    fetch('http://localhost:8080/books', {
+    fetch('http://localhost:8080/api/books', {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json'

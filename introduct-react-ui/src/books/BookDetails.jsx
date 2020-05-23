@@ -7,7 +7,7 @@ function BookDetails() {
   const history = useHistory();
 
   useEffect(() => {
-    fetch(`http://localhost:8080/books/${id}`)
+    fetch(`http://localhost:8080/api/books/${id}`)
       .then(response => response.json())
       .then(json => setBook(json))
   });

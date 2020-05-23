@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useParams, useHistory} from 'react-router-dom'
+import {useTitle} from "./Hooks";
 
 function BookEdit() {
   const {id} = useParams()
@@ -7,8 +8,10 @@ function BookEdit() {
   const [title, setTitle] = useState('')
   const [price, setPrice] = useState(0)
 
+  useTitle('Book Edit')
+
   useEffect(() => {
-    fetch(`http://localhost:8080/books/${id}`)
+    fetch(`http://localhost:8080/api/books/${id}`)
       .then(response => response.json())
       .then(({title, price}) => {
         setTitle(title);
@@ -18,7 +21,7 @@ function BookEdit() {
   }, [id])
 
   const handleEdit = () => {
-    fetch(`http://localhost:8080/books/${id}`, {
+    fetch(`http://localhost:8080/api/books/${id}`, {
       method: 'PUT',
       headers: {'content-type': 'application/json'},
       body: JSON.stringify({id, title, price})
