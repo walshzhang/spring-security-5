@@ -1,11 +1,13 @@
 import React from 'react'
 import {useInput, useTitle} from "./Hooks";
+import {useHistory} from 'react-router-dom'
 
 function BookAdd() {
   const [title, setTitle] = useInput('');
   const [price, setPrice] = useInput(0);
 
   useTitle('Add Book');
+  const history = useHistory();
 
   const addBook = e => {
     e.preventDefault();
@@ -19,7 +21,7 @@ function BookAdd() {
     };
 
     fetch('http://localhost:8080/books', data)
-      .then(response => console.log(response))
+      .then(response => history.push('/list'))
       .catch(error => console.log(error));
   };
 
