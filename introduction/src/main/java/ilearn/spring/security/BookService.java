@@ -12,6 +12,7 @@ public class BookService {
 
     public BookService() {
         this.books = new ArrayList<>();
+        books.add(new Book(1, "book1", 10));
     }
 
     public List<Book> getBooks() {
